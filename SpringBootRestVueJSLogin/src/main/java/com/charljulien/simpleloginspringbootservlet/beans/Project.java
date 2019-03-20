@@ -1,13 +1,16 @@
 package com.charljulien.simpleloginspringbootservlet.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "project")
-public class Project {
+public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,7 +30,8 @@ public class Project {
     @Column(name = "deadline")
     private Date deadline;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator")
     private User creator;
 
@@ -86,6 +90,9 @@ public class Project {
     public User getCreator() {
         return creator;
     }
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
     public List<Task> getTasks() {
         return tasks;
@@ -103,7 +110,7 @@ public class Project {
                 ", active = " + active +
                 ", creationDate = " + creationDate +
                 ", deadline = " + deadline +
-                ", creator = " + creator +
+                ", creator = " + creator.getUsername() +
                 ", \nList of tasks = " + tasks +
                 ", \nList of collaborators = " + collaborators +
                 '}';

@@ -1,13 +1,13 @@
 package com.charljulien.simpleloginspringbootservlet.beans;
 
-
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +19,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "created_projects")
     private List<Project> createdProjects;
 
@@ -80,6 +80,13 @@ public class User {
     }
     public void setParticipeInProjects(List<Project> participeInProjects) {
         this.participeInProjects = participeInProjects;
+    }
+
+    public void addCreatedProject(Project project) {
+        if (createdProjects != null) {
+            createdProjects.add(project);
+            project.setCreator(this);
+        }
     }
 
     @Override
