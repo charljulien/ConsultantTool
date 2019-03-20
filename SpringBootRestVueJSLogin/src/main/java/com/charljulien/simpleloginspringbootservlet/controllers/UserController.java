@@ -72,6 +72,7 @@ public class UserController {
             System.out.print("updating " + _user.getUsername());
             _user.setUsername(user.getUsername());
             _user.setPassword(user.getPassword());
+            _user.setParticipeInProjects(user.getParticipeInProjects());
             System.out.println(" to " + _user.getUsername());
             return new ResponseEntity<>(userService.update(_user), HttpStatus.OK);
         } else {
