@@ -1,5 +1,7 @@
 package com.charljulien.simpleloginspringbootservlet.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,10 +21,12 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "created_projects")
     private List<Project> createdProjects;
 
+    @JsonIgnore
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE})
@@ -86,6 +90,12 @@ public class User implements Serializable {
         if (createdProjects != null) {
             createdProjects.add(project);
             project.setCreator(this);
+        }
+    }
+
+    public void addParticipeInProject(Project project) {
+        if (participeInProjects != null) {
+            participeInProjects.add(project);
         }
     }
 

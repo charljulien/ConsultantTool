@@ -1,7 +1,5 @@
 package com.charljulien.simpleloginspringbootservlet.beans;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class Project implements Serializable {
     @Column(name = "deadline")
     private Date deadline;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator")
     private User creator;
@@ -101,8 +99,27 @@ public class Project implements Serializable {
         this.tasks = tasks;
     }
 
+    public List<User> getCollaborators() {
+        return collaborators;
+    }
+    public void setCollaborators(List<User> collaborators) {
+        this.collaborators = collaborators;
+    }
+
+    public void addCollaborator(User user) {
+        if (collaborators != null) {
+            collaborators.add(user);
+            user.addCreatedProject(this);
+        }
+    }
+
     @Override
     public String toString() {
+        String _creator;
+        if(creator != null)
+            _creator = creator.getUsername();
+        else
+            _creator = "No creator";
         return "Project{" +
                 "id = " + id +
                 ", name = '" + name + '\'' +
@@ -110,9 +127,9 @@ public class Project implements Serializable {
                 ", active = " + active +
                 ", creationDate = " + creationDate +
                 ", deadline = " + deadline +
-                ", creator = " + creator.getUsername() +
+                ", creator = " + _creator +
                 ", \nList of tasks = " + tasks +
-                ", \nList of collaborators = " + collaborators +
+//                ", \nList of collaborators = " + collaborators +
                 '}';
     }
 }
