@@ -26,7 +26,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Save Project
+     * Save Project.java
      *
      * @param project
      * @return Proejct entity
@@ -37,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Update Project
+     * Update Project.java
      *
      * @param project
      * @return Proejct entity
@@ -48,7 +48,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Delete Project
+     * Delete Project.java
      *
      * @param projectId
      * @return status of a HTTP response
@@ -60,10 +60,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Find Project by id
+     * Find Project.java by id
      *
      * @param id
-     * @return Project
+     * @return Project.java
      */
     @Override
     public Optional<Project> verifyProject(long id) {
@@ -71,9 +71,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Find Project by name
+     * Find Project.java by name
      * @param name
-     * @return Project
+     * @return Project.java
      */
     @Override
     public List<Project> findProjectByName(String name) {

@@ -28,7 +28,7 @@ public class Project implements Serializable {
     @Column(name = "deadline")
     private Date deadline;
 
-//    @JsonIgnore
+    //    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator")
     private User creator;
