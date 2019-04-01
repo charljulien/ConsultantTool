@@ -26,7 +26,7 @@ public class User implements Serializable {
     @Column(name = "created_projects")
     private List<Project> createdProjects;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE})

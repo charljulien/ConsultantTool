@@ -44,18 +44,14 @@ public class ProjectController {
 
         //Add project to Collaborator
         for(User collab : project.getCollaborators()){
-            System.out.println("COLLLLLAAAAAAAAAAABORAAAAAAATORRRRRRRRRRRRRRR: " + collab);
             Optional<User> collaborator = userService.verifyUser(collab.getId());
             User _collaborator = collaborator.get();
             _collaborator.addParticipeInProject(project);
-//            userService.update(_collaborator);
         }
 
-
-//        System.out.println(project);
         projectService.save(project);
-//        System.out.println(_user);
         userService.update(_creator);
+
         return project;
     }
 
@@ -64,11 +60,18 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @GetMapping(value = "/project/{name}")
+    @GetMapping(value = "/project/name/{name}")
     public List<Project> findByName(@PathVariable String name){
         List<Project> projects = projectService.findProjectByName(name);
         System.out.println(String.valueOf(projects));
         return projects;
+    }
+
+    @GetMapping(value = "/project/id/{id}")
+    public Optional<Project> findById(@PathVariable long id){
+        Optional<Project> project = projectService.findProjectById(id);
+        System.out.println(String.valueOf(project));
+        return project;
     }
 
     @DeleteMapping(value = "/project")
