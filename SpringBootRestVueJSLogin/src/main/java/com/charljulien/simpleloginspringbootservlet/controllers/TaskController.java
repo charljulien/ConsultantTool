@@ -1,6 +1,8 @@
 package com.charljulien.simpleloginspringbootservlet.controllers;
 
+import com.charljulien.simpleloginspringbootservlet.beans.Project;
 import com.charljulien.simpleloginspringbootservlet.beans.Task;
+import com.charljulien.simpleloginspringbootservlet.service.ProjectServiceImpl;
 import com.charljulien.simpleloginspringbootservlet.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +19,25 @@ public class TaskController {
     TaskServiceImpl taskService;
 
     @Autowired
+    ProjectServiceImpl projectService;
+
+    @Autowired
     public TaskController(TaskServiceImpl taskService) {
         this.taskService = taskService;
     }
 
     @PostMapping (value = "/task")
     public Task createTask(@RequestBody Task task){
-        System.out.println(task);
-        return taskService.save(task);
+
+        //Add task to Project Origin
+        Optional<Project> project = projectService.verifyProject(task.getProjectOrigin().getId());
+        Project _project = project.get();
+        _project.addTask(task);
+
+        taskService.save(task);
+        projectService.update(_project);
+
+        return task;
     }
 
     @GetMapping (value = "/task")

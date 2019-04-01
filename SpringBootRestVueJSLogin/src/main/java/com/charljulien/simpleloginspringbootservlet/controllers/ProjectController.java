@@ -36,13 +36,22 @@ public class ProjectController {
      */
     @PostMapping(value = "/project")
     public Project createProject(@RequestBody Project project){
-        Optional<User> user = userService.verifyUser(12);
-        User _user = user.get();
-        _user.addCreatedProject(project);
-        System.out.println(project);
+
+        //Add created project to Creator
+        Optional<User> user = userService.verifyUser(project.getCreator().getId());
+        User _creator = user.get();
+        _creator.addCreatedProject(project);
+
+        //Add project to Collaborator
+        for(User collab : project.getCollaborators()){
+            Optional<User> collaborator = userService.verifyUser(collab.getId());
+            User _collaborator = collaborator.get();
+            _collaborator.addParticipeInProject(project);
+        }
+
         projectService.save(project);
-        System.out.println(_user);
-        userService.update(_user);
+        userService.update(_creator);
+
         return project;
     }
 
@@ -51,43 +60,75 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @GetMapping(value = "/project/{name}")
+    @GetMapping(value = "/project/name/{name}")
     public List<Project> findByName(@PathVariable String name){
         List<Project> projects = projectService.findProjectByName(name);
         System.out.println(String.valueOf(projects));
         return projects;
     }
 
+    @GetMapping(value = "/project/id/{id}")
+    public Optional<Project> findById(@PathVariable long id){
+        Optional<Project> project = projectService.findProjectById(id);
+        System.out.println(String.valueOf(project));
+        return project;
+    }
+
     @DeleteMapping(value = "/project")
     public ResponseEntity<String> deleteProject(@RequestBody Project project){
         projectService.deleteProject(project.getId());
-        System.out.println("Project.java " + project.getId() + " has been deleted");
-        return new ResponseEntity<>("Project.java " + project.getId() + " has been deleted", HttpStatus.OK);
+        System.out.println("Project " + project.getId() + " has been deleted");
+        return new ResponseEntity<>("Project " + project.getId() + " has been deleted", HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/project/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable long id){
+    public ResponseEntity<String> deleteProjectById(@PathVariable long id){
         projectService.deleteProject(id);
-        System.out.println("Project.java " + id + " has been deleted");
-        return new ResponseEntity<>("Project.java " + id + " has been deleted", HttpStatus.OK);
+        System.out.println("Project " + id + " has been deleted");
+        return new ResponseEntity<>("Project " + id + " has been deleted", HttpStatus.OK);
     }
 
     @PutMapping(value = "/project")
     public ResponseEntity<Project> updateProject(@RequestBody Project project){
         Optional<Project> projectData = projectService.verifyProject(project.getId());
+        Optional<User> userData;
         if(projectData.isPresent()){
             Project _project = projectData.get();
+
+
             System.out.print("updating " + _project.getName());
+            System.out.println("/**************PROJECT IN PARAMETER**************/");
+            System.out.println(project + "\n");
+            System.out.println("/**************PROJECT TO BE UPDATED**************/");
+            System.out.println(_project + "\n");
+
+
+//            System.out.println("/**************COLLABORATOR IN PROJECT IN PARAMETER**************/");
+//            System.out.println(project.getCollaborators().get(0) + "\n");
+
+
             _project.setName(project.getName());
             _project.setDescription(project.getDescription());
             _project.setActive(project.isActive());
             _project.setDeadline(project.getDeadline());
+            if(project.getCollaborators()!=null){
+                userData = userService.verifyUser(project.getCollaborators().get(0).getId());
+                User _user = userData.get();
+                _project.addCollaborator(_user);
+                System.out.println("/**************COLLABORATOR IN PROJECT IN PARAMETER**************/");
+                System.out.println(_user + "\n");
+                userService.update(_user);
+            }
             _project.setTasks(project.getTasks());
-            return new ResponseEntity<>(projectService.update(_project), HttpStatus.OK);
+
+            System.out.println("/**************PROJECT UPDATED**************/");
+            System.out.println(_project + "\n");
+
+            projectService.update(_project);
+            return new ResponseEntity<>(project, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }
 

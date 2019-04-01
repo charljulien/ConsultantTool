@@ -27,7 +27,8 @@ public class Task {
     @Column(name = "deadline")
     private Date deadline;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+//    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_origin")
     private Project projectOrigin;
 
@@ -85,6 +86,9 @@ public class Task {
     public Project getProjectOrigin() {
         return projectOrigin;
     }
+    public void setProjectOrigin(Project projectOrigin) {
+        this.projectOrigin = projectOrigin;
+    }
 
     public List<User> getUsers() {
         return users;
@@ -102,7 +106,7 @@ public class Task {
                 ", active = " + active +
                 ", creation = " + creation +
                 ", deadline=  " + deadline +
-                ", projectOrigin = " + projectOrigin +
+//                ", projectOrigin = " + projectOrigin +
                 ", \nusers = " + users +
                 '}';
     }

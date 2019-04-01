@@ -30,15 +30,17 @@ public class Project implements Serializable {
     @Column(name = "deadline")
     private Date deadline;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator")
     private User creator;
 
-    @OneToMany(mappedBy = "projectOrigin")
+    @JsonIgnore
+    @OneToMany(mappedBy = "projectOrigin",
+            cascade = CascadeType.ALL)
     @Column(name = "tasks")
     private List<Task> tasks;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "participeInProjects")
     @Column(name = "assigned_projects")
     private List<User> collaborators;
@@ -101,8 +103,37 @@ public class Project implements Serializable {
         this.tasks = tasks;
     }
 
+    public void addTask(Task task) {
+        if (tasks != null) {
+            tasks.add(task);
+            task.setProjectOrigin(this);
+        }
+    }
+
+    public List<User> getCollaborators() {
+        return collaborators;
+    }
+    public void setCollaborators(List<User> collaborators) {
+        this.collaborators = collaborators;
+    }
+
+    public void addCollaborator(User user) {
+        if (collaborators != null) {
+            collaborators.add(user);
+            user.addParticipeInProject(this);
+        }
+    }
+
     @Override
     public String toString() {
+
+        //avoid null_pointer exception for testing
+        String _creator;
+        if(creator != null)
+            _creator = creator.getUsername();
+        else
+            _creator = "No creator";
+
         return "Project{" +
                 "id = " + id +
                 ", name = '" + name + '\'' +
@@ -110,7 +141,7 @@ public class Project implements Serializable {
                 ", active = " + active +
                 ", creationDate = " + creationDate +
                 ", deadline = " + deadline +
-//                ", creator = " + creator.getUsername() +
+                ", creator = " + _creator +
                 ", \nList of tasks = " + tasks +
 //                ", \nList of collaborators = " + collaborators +
                 '}';

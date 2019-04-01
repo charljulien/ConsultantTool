@@ -21,4 +21,6 @@ public interface ProjectService {
     Optional<Project> verifyProject(long id);
 
     List<Project> findProjectByName(String name);
+
+    Optional<Project> findProjectById(long id);
 }
