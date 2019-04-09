@@ -1,19 +1,21 @@
 <template>
-    <div class="list row">
+    <div class="row list">
         <div class="col-md-6">
-            <h4>Customers List</h4>
+    <!--<div>-->
+        <!--<div>-->
+            <h4>Project List</h4>
             <ul>
-                <li v-for="(customer, index) in customers" :key="index">
+                <li v-for="(project, index) in projects" :key="index">
                     <router-link :to="{
-                            name: 'customer-details',
-                            params: { customer: customer, id: customer.id }
+                            name: 'project',
+                            params: { project: project, id: project.id }
                         }">
-                        {{customer.name}}
+                        {{project.name}}
                     </router-link>
                 </li>
             </ul>
         </div>
-        <div class="col-md-6">
+        <div class="column">
             <app-project @refreshData="refreshList"></app-project>
         </div>
     </div>
@@ -60,9 +62,33 @@
 </script>
 
 <style>
-    .list {
+    .list{
         text-align: left;
-        max-width: 450px;
+        /*max-width: 450px;*/
         margin: auto;
+        width: 100%;
+    }
+    .col-md-6{
+        float: right;
+        text-align: right;
+        width: 30%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+        background-color:#c9302c;
+    }
+    /* Create two equal columns that floats next to each other */
+    .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+        background-color:#aaa;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
     }
 </style>

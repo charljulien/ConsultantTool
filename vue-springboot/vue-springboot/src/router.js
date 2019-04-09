@@ -38,12 +38,15 @@ export default new Router({
         {
             path: "/homepage",
             name: "Main",
-            component: Main
-        },
-        {
-            path: "/Project",
-            name: "Project",
-            component: Project
+            component: Main,
+            children: [
+                {
+                    path: "/Project",
+                    name: "Project",
+                    component: Project,
+                    props: true
+                }
+            ]
         }
     ]
 });

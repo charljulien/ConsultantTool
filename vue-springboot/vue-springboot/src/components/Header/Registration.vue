@@ -35,7 +35,7 @@
             }
         },
         methods:{
-            logUser() {
+            registerUser() {
                 var loggedin = true;
                 this.$emit('clicked', loggedin);
                 console.log(loggedin);

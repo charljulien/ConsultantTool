@@ -1,9 +1,7 @@
 <template>
     <div id="app" class="container-fluid">
-        <div @clicked="onClickChild">
-            <p>login is set to {{ loggedin }}</p>
-            <p>Route query login {{ this.$route.query.loggedin }}</p>
-        </div>
+        <p>login is set to {{ loggedin }}</p>
+        <p>Route query login {{ this.$route.query.loggedin }}</p>
         <div v-if="!loggedin">
             <nav>
                 <!--<router-link class="btn btn-primary" to="/">Customers</router-link>-->
@@ -18,7 +16,9 @@
                 <router-link class="btn btn-primary" to="/edit">Edit</router-link>
             </nav>
         </div>
-        <router-view></router-view>
+        <!--<app-login @clicked="onClickChild"></app-login>-->
+        <router-view @clicked="onClickChild"></router-view>
+        <!--<router-view></router-view>-->
 
 
         <br/>
@@ -26,7 +26,12 @@
 </template>
 
 <script>
+    // import Login from "../Header/Login";
+
     export default {
+        components: {
+          // 'app-login': Login
+        },
         name: "menubar",
         data(){
             return{
