@@ -1,13 +1,32 @@
 <template>
     <div id="app" class="container-fluid">
         <div class="site-info">
-            <h1>grokonez</h1>
+            <h1>Project Consultant tool</h1>
             <h3>Vue SpringBoot example</h3>
         </div>
+
+        <div v-if="!login">
+            <nav>
+                <router-link class="btn btn-primary" to= "/login">Login</router-link>
+                <router-link class="btn btn-primary" to="/register">Register</router-link>
+            </nav>
+        </div>
+        <div v-else>
+            <nav>
+                <h4>Welcome {{ username }} </h4>
+                <button class="btn btn-primary" v-on:click="logout()">Logout</button>
+                <router-link class="btn btn-primary" to="/edit">Edit</router-link>
+            </nav>
+        </div>
+
+
+
+
         <br/>
-        <router-view/>
+        <router-view v-bind:username="username" v-bind:login="login" @userSession="initUsername" @isUserActive="initSession"></router-view>
         <div v-if="login">
-            <app-main></app-main>
+            <!--<router-view v-bind:username="username"></router-view>-->
+            <!--<app-project-list v-bind:username="username"></app-project-list>-->
         </div>
     </div>
 </template>
@@ -17,9 +36,9 @@
 
 <script>
     // // Imports
-    import Main from './components/Main/Main';
+    import Projectlist from './components/Main/Project-list';
     import Project from './components/Main/Project';
-    // import Login from './components/user/Login';
+    import Menubar from "./components/Header/Menubar";
     // import Register from './components/user/Register';
     //
     // import Header from './components/ninjanet/Header.vue';
@@ -27,13 +46,15 @@
     // import Ninjas from './components/ninjanet/Ninjas.vue';
     export default {
         components: {
-            'app-main': Main,
+            'app-menubar': Menubar,
+            'app-project-list': Projectlist,
             'app-project': Project
         },
         name: "app",
         data(){
             return{
-                login: true,
+                login: false,
+                username: "",
                 ninjas: [
                     {name: 'Ryu', speciality: 'Vue Components', show: false},
                     {name: 'Crystal', speciality: 'HTML Wizardry', show: false},
@@ -48,6 +69,17 @@
         methods: {
             updateTitle: function(updatedTitle){
                 this.title = updatedTitle;
+            },
+            initUsername: function (value) {
+                this.username = value;
+            },
+            initSession: function(value) {
+                this.login = value;
+            },
+
+            logout(){
+                this.login = false;
+                this.username = "";
             }
         }
     };

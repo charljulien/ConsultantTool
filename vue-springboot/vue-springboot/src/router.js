@@ -3,7 +3,7 @@ import Router from "vue-router";
 import Menubar from "./components/Header/Menubar";
 import Login from "./components/Header/Login";
 import Register from "./components/Header/Registration";
-import Main from "./components/Main/Main";
+import Projectlist from "./components/Main/Project-list";
 import Project from "./components/Main/Project";
 
 
@@ -15,34 +15,34 @@ export default new Router({
         {
             path: "/",
             redirect: {
-                name: "menubar"
+                name: "project-list"
             }
         },
-        {
-            path: "/menubar",
-            name: "menubar",
-            component: Menubar,
-            children: [
+        // {
+            // path: "/menubar",
+            // name: "menubar",
+            // component: Menubar,
+            // children: [
                 {
-                    path: "login",
+                    path: "/login",
                     name: "login",
                     component: Login,
                 },
                 {
-                    path: "register",
+                    path: "/register",
                     name: "register",
                     component: Register,
-                }
-            ]
-        },
+                },
+            // ]
+        // },
         {
             path: "/homepage",
-            name: "Main",
-            component: Main,
+            name: "project-list",
+            component: Projectlist,
             children: [
                 {
-                    path: "/Project",
-                    name: "Project",
+                    path: "project/:id",
+                    name: "project",
                     component: Project,
                     props: true
                 }

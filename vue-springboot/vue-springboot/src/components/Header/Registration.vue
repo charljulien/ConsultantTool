@@ -1,12 +1,7 @@
 <template>
     <div class="submitform">
         <div v-if="!submitted">
-            <div v-if="samePassword">
-                <h4>Your password doesn't match</h4>
-            </div>
-            <div v-if="userAlreadyExist">
-                <h4>This username is already used</h4>
-            </div>
+            <br>
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" required v-model="user.username" name="username">
@@ -21,11 +16,16 @@
                 <label for="password">Repeat password</label>
                 <input type="password" class="form-control" id="repeatPassword" required v-model="user.repeatPassword" name="password">
             </div>
+
             <button v-on:click="register()" class="btn btn-success">Registration</button>
+            <br>
+            <div v-if="samePassword">
+                <h4>Your password doesn't match</h4>
+            </div>
+            <div v-if="userAlreadyExist">
+                <h4>This username is already used</h4>
+            </div>
         </div>
-
-
-        <!--<router-link class="btn btn-success" to="{ name: 'menubar', query: { login: true }}">Connect</router-link>-->
     </div>
 </template>
 
@@ -67,7 +67,7 @@
                             this.userAlreadyExist = true;
                         }
                     }
-                    console.log("userAlreadyexist =" + this.userAlreadyExist);
+                    console.log("userAlreadyExist =" + this.userAlreadyExist);
                     if(!this.userAlreadyExist){
                         this.registerUser();
                     }
@@ -80,25 +80,22 @@
                     repeatPassword: this.user.repeatPassword
                 };
                 console.log("Register user");
-                if(!this.userAlreadyExist){
-                    if (data.password === data.repeatPassword){
-
-                        http.post("/user", data).then(response => {
-                            this.user.id = response.data.id;
-                            console.log(response.data);
-                        }).catch(e => {
-                            console.log(e)
-                        });
-                        var loggedin = true;
-                        this.$emit('clicked', loggedin);
-                        console.log(loggedin);
-                        router.push({ name: "menubar"
-                            // , query: { loggedin: true }
-                        });
-                        this.submitted = true;
-                    }else {
-                        this.samePassword = true;
-                    }
+                if (data.password === data.repeatPassword){
+                    http.post("/user", data).then(response => {
+                        this.user.id = response.data.id;
+                        console.log("response user" + response.data.username);
+                        console.log("data user" + this.user.username);
+                    }).catch(e => {
+                        console.log(e)
+                    });
+                    var loggedin = true;
+                    this.$emit('isUserActive', loggedin);
+                    this.$emit('userSession', this.user.username);
+                    console.log(loggedin);
+                    router.push({ name: "menubar"});
+                    this.submitted = true;
+                }else {
+                    this.samePassword = true;
                 }
             },
 
